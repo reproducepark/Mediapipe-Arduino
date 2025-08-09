@@ -6,6 +6,7 @@
 - **SimplePoseRecognition**: MediaPipe Tasks Pose Landmarker로 전신 포즈 랜드마크/스켈레톤 표시 및 라벨 출력 (스무딩 적용)
 - **SimpleObjectDetection**: MediaPipe Tasks Object Detector로 실시간 객체 감지(바운딩 박스/라벨)
 - **SimpleSerialConsole**: Web Serial API 기반 시리얼 콘솔 (기본 보드레이트 9600bps)
+- **SimpleTeachableExample**: Teachable Machine 이미지 모델로 웹캠 프레임 분류, 하단에 클래스별 확률 막대(bar) 표시
 
 ### 요구사항
 - 최신 브라우저 (Chrome/Edge/Firefox/Safari)
@@ -18,6 +19,7 @@ objectDet/
   ├─ SimpleHandRecognition/     # 손 인식 (Hand Landmarker)
   ├─ SimplePoseRecognition/     # 사람 포즈 인식 (Pose Landmarker)
   ├─ SimpleObjectDetection/     # 객체 감지 (Object Detector)
+  ├─ SimpleTeachableExample/    # Teachable Machine 이미지 분류 (웹캠 + 확률 막대)
   └─ SimpleSerialConsole/       # Web Serial 콘솔 (9600bps)
 ```
 
@@ -44,7 +46,7 @@ py -m http.server 8000
 ```
 
 그 후 브라우저에서 다음 주소로 접속합니다.
-- 카메라 예제: `http://localhost:8000/SimpleHandRecognition/`, `http://localhost:8000/SimplePoseRecognition/`, `http://localhost:8000/SimpleObjectDetection/`
+- 카메라 예제: `http://localhost:8000/SimpleHandRecognition/`, `http://localhost:8000/SimplePoseRecognition/`, `http://localhost:8000/SimpleObjectDetection/`, `http://localhost:8000/SimpleTeachableExample/`
 - 시리얼 예제: `http://localhost:8000/SimpleSerialConsole/`
 
 카메라 예제는 `navigator.mediaDevices.getUserMedia` 권한이 필요합니다. 로컬(`localhost`) 또는 HTTPS 환경에서 동작합니다.
