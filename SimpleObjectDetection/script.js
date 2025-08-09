@@ -24,7 +24,8 @@ async function createObjectDetector() {
     objectDetector = await ObjectDetector.createFromOptions(vision, {
       baseOptions: {
         modelAssetPath:
-          'https://storage.googleapis.com/mediapipe-models/object_detector/efficientdet_lite0/float16/latest/efficientdet_lite0.tflite',
+          'https://storage.googleapis.com/mediapipe-models/object_detector/efficientdet_lite2/float32/latest/efficientdet_lite2.tflite',
+          // 'https://storage.googleapis.com/mediapipe-models/object_detector/efficientdet_lite0/float16/latest/efficientdet_lite0.tflite',
         delegate: 'GPU',
       },
       scoreThreshold: 0.5,
