@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Serial Console (9600 bps)</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Web Serial Console</h1>
+
+        <div class="controls">
+            <button id="connectButton">시리얼 연결</button>
+            <button id="disconnectButton" disabled>시리얼 해제</button>
+        </div>
+
+        <div class="console-box">
+            <div class="send-row">
+                <input id="inputText" type="text" placeholder="보낼 텍스트를 입력하고 Enter 또는 전송을 누르세요" autocomplete="off" />
+                <select id="lineEnding" title="줄바꿈">
+                    <option value="none">No EOL</option>
+                    <option value="lf">LF (\n)</option>
+                    <option value="crlf" selected>CRLF (\r\n)</option>
+                </select>
+                <button id="sendButton" disabled>전송</button>
+                <button id="clearLogButton">로그 지우기</button>
+            </div>
+
+            <div class="log-container">
+                <pre id="log" class="log" aria-live="polite"></pre>
+            </div>
+        </div>
+
+        <div class="info">
+            <p id="status">연결되지 않음. "시리얼 연결" 버튼을 눌러 포트를 선택하세요. 기본 보드레이트는 <b>9600</b>입니다.</p>
+            <p class="note">Web Serial API는 Chromium 계열 브라우저(Chrome/Edge)에서 HTTPS 또는 localhost 환경에서만 정상 동작합니다.</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
+
