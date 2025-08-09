@@ -7,11 +7,12 @@
 - **SimpleObjectDetection**: MediaPipe Tasks Object Detector로 실시간 객체 감지(바운딩 박스/라벨)
 - **SimpleSerialConsole**: Web Serial API 기반 시리얼 콘솔 (기본 보드레이트 9600bps)
 - **SimpleTeachableExample**: Teachable Machine 이미지 모델로 웹캠 프레임 분류, 하단에 클래스별 확률 막대(bar) 표시
+- **SimpleObjectDetectionSerial**: 객체 감지 + 시리얼 통합. 드롭다운에서 전송할 클래스를 선택하면 해당 클래스의 개수를 "Classname : 3" 형식으로 9600bps로 전송
 
 ### 요구사항
 - 최신 브라우저 (Chrome/Edge/Firefox/Safari)
 - 카메라 예제: 카메라가 연결된 환경에서 동작
-- SimpleSerialConsole: Chrome/Edge(Chromium 계열) 필요, HTTPS 또는 localhost에서만 동작
+ - SimpleSerialConsole, SimpleObjectDetectionSerial: Chrome/Edge(Chromium 계열) 필요, HTTPS 또는 localhost에서만 동작
 
 ### 디렉터리 구조
 ```text
@@ -19,6 +20,7 @@ objectDet/
   ├─ SimpleHandRecognition/     # 손 인식 (Hand Landmarker)
   ├─ SimplePoseRecognition/     # 사람 포즈 인식 (Pose Landmarker)
   ├─ SimpleObjectDetection/     # 객체 감지 (Object Detector)
+  ├─ SimpleObjectDetectionSerial/ # 객체 감지 + 시리얼 전송 통합
   ├─ SimpleTeachableExample/    # Teachable Machine 이미지 분류 (웹캠 + 확률 막대)
   └─ SimpleSerialConsole/       # Web Serial 콘솔 (9600bps)
 ```
@@ -31,6 +33,15 @@ objectDet/
 5. 수신 데이터는 하단 로그에 실시간 표시, `로그 지우기`로 클리어
 
 주의: Web Serial API는 Chrome/Edge에서만 지원되며, HTTPS 페이지 또는 `localhost`에서만 동작합니다.
+
+### SimpleObjectDetectionSerial 사용법
+1. 로컬 서버 실행 후 브라우저에서 `http://localhost:8000/SimpleObjectDetectionSerial/` 접속
+2. "카메라 시작"을 눌러 웹캠을 켭니다. 화면에 객체가 보이면 감지/라벨이 표시됩니다.
+3. "시리얼 연결"을 눌러 포트를 선택하면 9600bps로 연결됩니다.
+4. 드롭다운에서 전송할 클래스를 선택합니다. 감지된 클래스가 나타날 때 자동으로 목록에 추가됩니다.
+5. 선택된 클래스의 개수가 변할 때마다 자동으로 `Classname : 3` 형식으로 CRLF(`\r\n`)를 포함해 송신됩니다.
+
+주의: Web Serial API 제약(Chromium/HTTPS/localhost)은 여기에도 동일하게 적용됩니다.
 
 ### 간단한 웹서버 실행 (Python)
 프로젝트 루트(`objectDet/`)에서 아래 명령을 실행하세요.
@@ -48,6 +59,7 @@ py -m http.server 8000
 그 후 브라우저에서 다음 주소로 접속합니다.
 - 카메라 예제: `http://localhost:8000/SimpleHandRecognition/`, `http://localhost:8000/SimplePoseRecognition/`, `http://localhost:8000/SimpleObjectDetection/`, `http://localhost:8000/SimpleTeachableExample/`
 - 시리얼 예제: `http://localhost:8000/SimpleSerialConsole/`
+- 통합 예제: `http://localhost:8000/SimpleObjectDetectionSerial/`
 
 카메라 예제는 `navigator.mediaDevices.getUserMedia` 권한이 필요합니다. 로컬(`localhost`) 또는 HTTPS 환경에서 동작합니다.
 

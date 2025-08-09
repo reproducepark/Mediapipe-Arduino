@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Object detection + Serial</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Object detection + Serial</h1>
+
+    <div class="video-container">
+      <video class="input-video" playsinline></video>
+      <canvas class="output-canvas"></canvas>
+    </div>
+
+    <div class="controls">
+      <button id="startButton">카메라 시작</button>
+      <button id="stopButton" disabled>카메라 중지</button>
+    </div>
+
+    <div class="controls serial-controls">
+      <button id="connectButton">시리얼 연결</button>
+      <button id="disconnectButton" disabled>시리얼 해제</button>
+      <select id="classSelect" title="전송할 클래스 선택">
+        <option value="">전송할 클래스를 선택하세요</option>
+      </select>
+      <span id="selectedCount" class="badge">선택 클래스 수: 0</span>
+    </div>
+
+    <div class="info">
+      <p id="status">카메라를 시작하려면 버튼을 클릭하세요.</p>
+      <p id="objectCount">감지된 객체: 0</p>
+      <p id="serialStatus">시리얼: 연결되지 않음</p>
+    </div>
+  </div>
+
+  <script type="module" src="script.js"></script>
+</body>
+</html>
+
+
