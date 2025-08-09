@@ -1,6 +1,6 @@
-## MediaPipe.js 교육용 예시 모음 (+ Web Serial 예제)
+## MediaPipe.js + Arduino Examples
 
-웹 브라우저에서 카메라를 활용해 손/사람을 인식해보는 간단한 교육용 예시와, Web Serial API 기반의 시리얼 콘솔 예제를 포함합니다.
+개발환경 구축이 어려운 학생들이 브라우저 엔진을 통해 추론을 하고 아두이노를 조작할 수 있도록 합니다.
 
 - **SimpleHandRecognition**: MediaPipe Hands로 실시간 손 랜드마크(21포인트)와 스켈레톤을 표시
 - **SimplePeopleRecognition**: MediaPipe Pose로 전신 포즈 랜드마크와 스켈레톤을 표시 및 라벨 출력
