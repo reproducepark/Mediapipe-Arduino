@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Object detection</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- drawing_utils는 사용하지 않지만, 다른 페이지와의 일관성을 위해 필요 시 추가 가능 -->
+</head>
+<body>
+  <div class="container">
+    <h1>Object detection</h1>
+    <div class="video-container">
+      <video class="input-video" playsinline></video>
+      <canvas class="output-canvas"></canvas>
+    </div>
+    <div class="controls">
+      <button id="startButton">카메라 시작</button>
+      <button id="stopButton" disabled>카메라 중지</button>
+    </div>
+    <div class="info">
+      <p id="status">카메라를 시작하려면 버튼을 클릭하세요.</p>
+      <p id="objectCount">감지된 객체: 0</p>
+    </div>
+  </div>
+  <script type="module" src="script.js"></script>
+</body>
+</html>
+
+

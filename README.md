@@ -2,8 +2,9 @@
 
 개발환경 구축이 어려운 학생들이 브라우저 엔진을 통해 추론을 하고 아두이노를 조작할 수 있도록 합니다.
 
-- **SimpleHandRecognition**: MediaPipe Hands로 실시간 손 랜드마크(21포인트)와 스켈레톤을 표시
-- **SimplePeopleRecognition**: MediaPipe Pose로 전신 포즈 랜드마크와 스켈레톤을 표시 및 라벨 출력
+- **SimpleHandRecognition**: MediaPipe Tasks Hand Landmarker로 실시간 손 랜드마크(21포인트) 및 스켈레톤 표시
+- **SimplePoseRecognition**: MediaPipe Tasks Pose Landmarker로 전신 포즈 랜드마크/스켈레톤 표시 및 라벨 출력 (스무딩 적용)
+- **SimpleObjectDetection**: MediaPipe Tasks Object Detector로 실시간 객체 감지(바운딩 박스/라벨)
 - **SimpleSerialConsole**: Web Serial API 기반 시리얼 콘솔 (기본 보드레이트 9600bps)
 
 ### 요구사항
@@ -14,9 +15,10 @@
 ### 디렉터리 구조
 ```text
 objectDet/
-  ├─ SimpleHandRecognition/    # 손 인식 예시 (Hands)
-  ├─ SimplePeopleRecognition/  # 사람 포즈 인식 예시 (Pose)
-  └─ SimpleSerialConsole/      # Web Serial 콘솔 (9600bps)
+  ├─ SimpleHandRecognition/     # 손 인식 (Hand Landmarker)
+  ├─ SimplePoseRecognition/     # 사람 포즈 인식 (Pose Landmarker)
+  ├─ SimpleObjectDetection/     # 객체 감지 (Object Detector)
+  └─ SimpleSerialConsole/       # Web Serial 콘솔 (9600bps)
 ```
 
 ### SimpleSerialConsole 사용법
@@ -42,10 +44,14 @@ py -m http.server 8000
 ```
 
 그 후 브라우저에서 다음 주소로 접속합니다.
-- 카메라 예제: `http://localhost:8000/SimpleHandRecognition/`, `http://localhost:8000/SimplePeopleRecognition/`
+- 카메라 예제: `http://localhost:8000/SimpleHandRecognition/`, `http://localhost:8000/SimplePoseRecognition/`, `http://localhost:8000/SimpleObjectDetection/`
 - 시리얼 예제: `http://localhost:8000/SimpleSerialConsole/`
 
-### 참고
-- MediaPipe Hands: [Link](https://developers.google.com/mediapipe/solutions/vision/hand_landmarker)
-- MediaPipe Pose: [Link](https://developers.google.com/mediapipe/solutions/vision/pose_landmarker)
+카메라 예제는 `navigator.mediaDevices.getUserMedia` 권한이 필요합니다. 로컬(`localhost`) 또는 HTTPS 환경에서 동작합니다.
 
+모델과 WASM은 CDN에서 로드되므로 인터넷 연결이 필요합니다.
+
+### 참고
+- Hand Landmarker: [문서](https://developers.google.com/mediapipe/solutions/vision/hand_landmarker)
+- Pose Landmarker: [문서](https://developers.google.com/mediapipe/solutions/vision/pose_landmarker)
+- Object Detector: [문서](https://developers.google.com/mediapipe/solutions/vision/object_detector)
