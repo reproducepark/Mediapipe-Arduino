@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Teachable + Serial (Top Class Sender)</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Teachable + Serial</h1>
+
+    <div class="video-container">
+      <video class="input-video" playsinline></video>
+      <canvas class="output-canvas"></canvas>
+    </div>
+
+    <div class="controls">
+      <button id="startButton">카메라 시작</button>
+      <button id="stopButton" disabled>카메라 중지</button>
+    </div>
+
+    <div class="controls serial-controls">
+      <button id="connectButton">시리얼 연결</button>
+      <button id="disconnectButton" disabled>시리얼 해제</button>
+    </div>
+
+    <div class="info">
+      <p id="status">카메라를 시작하면 모델이 로드되고 예측 결과가 아래에 표시됩니다.</p>
+      <p id="serialStatus">시리얼: 연결되지 않음</p>
+      <p id="lastSent">마지막 전송: -</p>
+    </div>
+
+    <div class="predictions" id="predictions"></div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
+  <script type="module" src="script.js"></script>
+</body>
+</html>
+
+

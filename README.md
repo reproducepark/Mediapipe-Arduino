@@ -8,6 +8,7 @@
 - **SimpleSerialConsole**: Web Serial API 기반 시리얼 콘솔 (기본 보드레이트 9600bps)
 - **SimpleTeachableExample**: Teachable Machine 이미지 모델로 웹캠 프레임 분류, 하단에 클래스별 확률 막대(bar) 표시
 - **SimpleObjectDetectionSerial**: 객체 감지 + 시리얼 통합. 드롭다운에서 전송할 클래스를 선택하면 해당 클래스의 개수를 "Classname : 3" 형식으로 9600bps로 전송
+- **SimpleTeachableSerial**: Teachable Machine 이미지 분류 + 시리얼 통합. 가장 높은 확률의 클래스 라벨을 9600bps로 자동 전송 (클래스가 바뀔 때만 전송)
 
 ### 요구사항
 - 최신 브라우저 (Chrome/Edge/Firefox/Safari)
@@ -60,6 +61,7 @@ py -m http.server 8000
 - 카메라 예제: `http://localhost:8000/SimpleHandRecognition/`, `http://localhost:8000/SimplePoseRecognition/`, `http://localhost:8000/SimpleObjectDetection/`, `http://localhost:8000/SimpleTeachableExample/`
 - 시리얼 예제: `http://localhost:8000/SimpleSerialConsole/`
 - 통합 예제: `http://localhost:8000/SimpleObjectDetectionSerial/`
+- Teachable 통합: `http://localhost:8000/SimpleTeachableSerial/`
 
 카메라 예제는 `navigator.mediaDevices.getUserMedia` 권한이 필요합니다. 로컬(`localhost`) 또는 HTTPS 환경에서 동작합니다.
 
@@ -69,3 +71,11 @@ py -m http.server 8000
 - Hand Landmarker: [문서](https://developers.google.com/mediapipe/solutions/vision/hand_landmarker)
 - Pose Landmarker: [문서](https://developers.google.com/mediapipe/solutions/vision/pose_landmarker)
 - Object Detector: [문서](https://developers.google.com/mediapipe/solutions/vision/object_detector)
+
+### SimpleTeachableSerial 사용법
+1. 로컬 서버 실행 후 브라우저에서 `http://localhost:8000/SimpleTeachableSerial/` 접속
+2. "카메라 시작"을 눌러 웹캠을 켭니다. 하단에 클래스별 확률 막대가 표시됩니다.
+3. "시리얼 연결"을 눌러 포트를 선택하면 9600bps로 연결됩니다.
+4. 분류 결과의 최상위(가장 높은 확률) 클래스 라벨이 바뀔 때마다 자동으로 해당 라벨이 CRLF(`\r\n`)를 포함해 송신됩니다.
+   - 예: `cat` → `dog`로 바뀌면, `dog\r\n` 전송
+   - 동일 라벨이 유지되면 중복 전송을 방지합니다.
