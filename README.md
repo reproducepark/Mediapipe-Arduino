@@ -52,9 +52,9 @@ macOS / Linux (Python 3):
 python3 -m http.server 8000
 ```
 
-Windows (Python launcher):
+Windows (Python):
 ```bash
-py -m http.server 8000
+python -m http.server 8000
 ```
 
 그 후 브라우저에서 다음 주소로 접속합니다.
