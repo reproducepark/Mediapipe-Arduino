@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>People Skeleton Recognition</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- MediaPipe Pose 라이브러리 -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose/pose.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>People Skeleton Recognition</h1>
+        <div class="video-container">
+            <video class="input-video" playsinline></video>
+            <canvas class="output-canvas"></canvas>
+        </div>
+        <div class="controls">
+            <button id="startButton">카메라 시작</button>
+            <button id="stopButton" disabled>카메라 중지</button>
+        </div>
+        <div class="info">
+            <p id="status">카메라를 시작하려면 버튼을 클릭하세요.</p>
+            <p id="peopleCount">감지된 사람: 0</p>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
