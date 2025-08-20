@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gesture Recognition + Serial</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Gesture Recognition + Serial</h1>
+    
+    <div class="video-container">
+      <video class="input-video" playsinline></video>
+      <canvas class="output-canvas"></canvas>
+    </div>
+
+    <div class="controls">
+      <button id="startButton">카메라 시작</button>
+      <button id="stopButton" disabled>카메라 중지</button>
+    </div>
+
+    <div class="controls serial-controls">
+      <button id="connectButton">시리얼 연결</button>
+      <button id="disconnectButton" disabled>시리얼 해제</button>
+      <select id="transmitMode" title="전송 모드 선택">
+        <option value="gesture">동작만 전송</option>
+        <option value="handCount">손 개수 전송</option>
+        <option value="handedness">손잡이 정보 전송</option>
+        <option value="all">모든 정보 전송</option>
+      </select>
+      <select id="gestureFilter" title="전송할 동작 필터">
+        <option value="all">모든 동작</option>
+        <option value="highConfidence">고신뢰도만 (80%+)</option>
+        <option value="specific">특정 동작만</option>
+      </select>
+      <select id="specificGesture" title="특정 동작 선택" disabled>
+        <option value="">선택하세요</option>
+        <option value="Thumb_Up">엄지 올리기</option>
+        <option value="Thumb_Down">엄지 내리기</option>
+        <option value="Victory">브이 사인</option>
+        <option value="Open_Palm">손바닥 펴기</option>
+        <option value="Closed_Fist">주먹 쥐기</option>
+        <option value="Pointing_Up">위로 가리키기</option>
+        <option value="ILoveYou">사랑해 사인</option>
+      </select>
+    </div>
+
+    <div class="info">
+      <p id="status">카메라를 시작하려면 버튼을 클릭하세요.</p>
+      <div class="gesture-info">
+        <div class="gesture-result">
+          <h3>인식된 동작</h3>
+          <p id="gestureResult">없음</p>
+          <p id="gestureConfidence">신뢰도: 0%</p>
+        </div>
+        <div class="hand-info">
+          <h3>손 정보</h3>
+          <p id="handCount">감지된 손: 0</p>
+          <p id="handedness">손잡이: 없음</p>
+        </div>
+      </div>
+      <div class="serial-info">
+        <p id="serialStatus">시리얼: 연결되지 않음</p>
+        <p id="lastSent">마지막 전송: 없음</p>
+        <p id="transmitCount">전송 횟수: 0</p>
+      </div>
+      <div class="gesture-list">
+        <h3>인식 가능한 동작</h3>
+        <div class="gestures">
+          <span class="gesture-item">👊 Closed_Fist</span>
+          <span class="gesture-item">✋ Open_Palm</span>
+          <span class="gesture-item">☝️ Pointing_Up</span>
+          <span class="gesture-item">👍 Thumb_Up</span>
+          <span class="gesture-item">👎 Thumb_Down</span>
+          <span class="gesture-item">✌️ Victory</span>
+          <span class="gesture-item">🤟 ILoveYou</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script type="module" src="script.js"></script>
+</body>
+</html>
