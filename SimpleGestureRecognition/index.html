@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gesture Recognition</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Gesture Recognition</h1>
+    <div class="video-container">
+      <video class="input-video" playsinline></video>
+      <canvas class="output-canvas"></canvas>
+    </div>
+    <div class="controls">
+      <button id="startButton">카메라 시작</button>
+      <button id="stopButton" disabled>카메라 중지</button>
+    </div>
+    <div class="info">
+      <p id="status">카메라를 시작하려면 버튼을 클릭하세요.</p>
+      <div class="gesture-info">
+        <div class="gesture-result">
+          <h3>인식된 동작</h3>
+          <p id="gestureResult">없음</p>
+          <p id="gestureConfidence">신뢰도: 0%</p>
+        </div>
+        <div class="hand-info">
+          <h3>손 정보</h3>
+          <p id="handCount">감지된 손: 0</p>
+          <p id="handedness">손잡이: 없음</p>
+        </div>
+      </div>
+      <div class="gesture-list">
+        <h3>인식 가능한 동작</h3>
+        <div class="gestures">
+          <span class="gesture-item">👊 Closed_Fist</span>
+          <span class="gesture-item">✋ Open_Palm</span>
+          <span class="gesture-item">☝️ Pointing_Up</span>
+          <span class="gesture-item">👍 Thumb_Up</span>
+          <span class="gesture-item">👎 Thumb_Down</span>
+          <span class="gesture-item">✌️ Victory</span>
+          <span class="gesture-item">🤟 ILoveYou</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script type="module" src="script.js"></script>
+</body>
+</html>
