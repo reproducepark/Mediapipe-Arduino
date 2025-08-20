@@ -26,6 +26,7 @@ async function createObjectDetector() {
         modelAssetPath:
           'https://storage.googleapis.com/mediapipe-models/object_detector/efficientdet_lite2/float32/latest/efficientdet_lite2.tflite',
           // 'https://storage.googleapis.com/mediapipe-models/object_detector/efficientdet_lite0/float16/latest/efficientdet_lite0.tflite',
+        // delegate: 'CPU',
         delegate: 'GPU',
       },
       scoreThreshold: 0.5,

@@ -39,6 +39,7 @@ async function createImageClassifier() {
       baseOptions: {
         modelAssetPath: 
           'https://storage.googleapis.com/mediapipe-models/image_classifier/efficientnet_lite0/float32/1/efficientnet_lite0.tflite',
+        // delegate: 'CPU',
         delegate: 'GPU',
       },
       runningMode,
