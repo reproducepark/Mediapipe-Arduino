@@ -11,7 +11,7 @@ const stopButton = document.getElementById('stopButton');
 const statusElement = document.getElementById('status');
 const objectCountElement = document.getElementById('objectCount');
 const serialStatusElement = document.getElementById('serialStatus');
-const selectedCountElement = document.getElementById('selectedCount');
+const centerCoordinateElement = document.getElementById('centerCoordinate');
 // DOM: serial controls
 const connectButton = document.getElementById('connectButton');
 const disconnectButton = document.getElementById('disconnectButton');
@@ -31,9 +31,9 @@ let writer = null;
 let reader = null;
 let readLoopAbortController = null;
 
-// Class count cache for the currently selected class
+// Class center coordinates cache for the currently selected class
 let selectedClassName = '';
-let lastSentCount = null;
+let lastSentCoordinates = null;
 
 // Create detector
 async function createObjectDetector() {
@@ -70,6 +70,21 @@ function ensureClassOptionExists(name) {
   classSelect.appendChild(opt);
 }
 
+// Calculate normalized center coordinates (0-1 range)
+function calculateNormalizedCenter(boundingBox, canvasWidth, canvasHeight) {
+  const centerX = boundingBox.originX + boundingBox.width / 2;
+  const centerY = boundingBox.originY + boundingBox.height / 2;
+  
+  const normalizedX = centerX / canvasWidth;
+  const normalizedY = centerY / canvasHeight;
+  
+  // Clamp values between 0 and 1
+  return {
+    x: Math.max(0, Math.min(1, normalizedX)),
+    y: Math.max(0, Math.min(1, normalizedY))
+  };
+}
+
 function drawDetections() {
   canvasCtx.save();
   canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
@@ -78,7 +93,9 @@ function drawDetections() {
   const detections = results?.detections ?? [];
   objectCountElement.textContent = `감지된 객체: ${detections.length}`;
 
-  const counts = {};
+  const objectsByClass = {};
+  let selectedClassCenters = [];
+
   for (const det of detections) {
     const cat = det.categories?.[0];
     const name = cat?.categoryName ?? 'object';
@@ -88,13 +105,45 @@ function drawDetections() {
     // maintain class list
     ensureClassOptionExists(name);
 
-    // count per class
-    counts[name] = (counts[name] ?? 0) + 1;
+    // Store objects by class
+    if (!objectsByClass[name]) {
+      objectsByClass[name] = [];
+    }
+    objectsByClass[name].push(det);
+
+    // Calculate center coordinates for display
+    const center = calculateNormalizedCenter(b, canvasElement.width, canvasElement.height);
+    
+    // If this is the selected class, collect all center coordinates
+    const selectedClass = selectedClassName || classSelect.value || '';
+    if (name === selectedClass) {
+      selectedClassCenters.push(center);
+    }
 
     // draw box
-    canvasCtx.strokeStyle = '#00ff88';
-    canvasCtx.lineWidth = 3;
+    canvasCtx.strokeStyle = name === selectedClass ? '#ff0088' : '#00ff88';
+    canvasCtx.lineWidth = name === selectedClass ? 4 : 3;
     canvasCtx.strokeRect(b.originX, b.originY, b.width, b.height);
+
+    // draw center point for selected class
+    if (name === selectedClass) {
+      const centerX = b.originX + b.width / 2;
+      const centerY = b.originY + b.height / 2;
+      canvasCtx.fillStyle = '#ff0088';
+      canvasCtx.beginPath();
+      canvasCtx.arc(centerX, centerY, 8, 0, 2 * Math.PI);
+      canvasCtx.fill();
+      
+      // draw crosshair
+      canvasCtx.strokeStyle = '#ff0088';
+      canvasCtx.lineWidth = 2;
+      canvasCtx.beginPath();
+      canvasCtx.moveTo(centerX - 15, centerY);
+      canvasCtx.lineTo(centerX + 15, centerY);
+      canvasCtx.moveTo(centerX, centerY - 15);
+      canvasCtx.lineTo(centerX, centerY + 15);
+      canvasCtx.stroke();
+    }
 
     // label bg
     const label = `${name} ${(score * 100).toFixed(1)}%`;
@@ -106,26 +155,53 @@ function drawDetections() {
     canvasCtx.fillRect(b.originX, Math.max(0, b.originY - textH), textW, textH);
 
     // label text
-    canvasCtx.fillStyle = '#00ff88';
+    canvasCtx.fillStyle = name === selectedClass ? '#ff0088' : '#00ff88';
     canvasCtx.fillText(label, b.originX + 5, Math.max(14, b.originY - 6));
   }
   canvasCtx.restore();
 
-  // Update selected class count badge
+  // Update center coordinates display and send via serial
   const sel = selectedClassName || classSelect.value || '';
-  const currentCount = sel ? counts[sel] ?? 0 : 0;
-  selectedClassName = sel;
-  selectedCountElement.textContent = `선택 클래스 수: ${currentCount}`;
-
-  // Auto-send if changed
-  maybeSendSelectedCount(sel, currentCount);
+  if (sel && selectedClassCenters.length > 0) {
+    // Display all center coordinates
+    const coordStrings = selectedClassCenters.map(coord => 
+      `(${coord.x.toFixed(3)}, ${coord.y.toFixed(3)})`
+    );
+    centerCoordinateElement.textContent = 
+      `중심좌표[${selectedClassCenters.length}개]: ${coordStrings.join(', ')}`;
+    
+    // Auto-send if changed
+    maybeSendCenterCoordinates(sel, selectedClassCenters);
+  } else if (sel) {
+    centerCoordinateElement.textContent = `중심좌표: (${sel} 미감지)`;
+    // Send empty coordinates if no object detected
+    maybeSendCenterCoordinates(sel, []);
+  } else {
+    centerCoordinateElement.textContent = '중심좌표: (-, -)';
+  }
 }
 
-function maybeSendSelectedCount(name, count) {
-  if (!name) return;
-  if (lastSentCount !== null && lastSentCount === count) return;
-  lastSentCount = count;
-  sendSerialLine(`${name} : ${count}`);
+function maybeSendCenterCoordinates(className, coordinates) {
+  if (!className) return;
+  
+  // Convert coordinates array to string for comparison
+  let coordString;
+  if (coordinates && coordinates.length > 0) {
+    coordString = coordinates.map(coord => `${coord.x.toFixed(3)},${coord.y.toFixed(3)}`).join('|');
+  } else {
+    coordString = 'null';
+  }
+  
+  if (lastSentCoordinates !== null && lastSentCoordinates === coordString) return;
+  lastSentCoordinates = coordString;
+  
+  if (coordinates && coordinates.length > 0) {
+    // Send all normalized coordinates as "className:x1,y1|x2,y2|x3,y3"
+    sendSerialLine(`${className}:${coordString}`);
+  } else {
+    // Send indication that no objects detected
+    sendSerialLine(`${className}:not_detected`);
+  }
 }
 
 function predictWebcamVFC(now) {
@@ -206,6 +282,7 @@ function stopCamera() {
   stopButton.disabled = true;
   statusElement.textContent = '카메라를 시작하려면 버튼을 클릭하세요.';
   objectCountElement.textContent = '감지된 객체: 0';
+  centerCoordinateElement.textContent = '중심좌표: (-, -)';
   canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
   drawInitialCanvasMessage();
 }
@@ -287,7 +364,7 @@ connectButton.addEventListener('click', connectSerial);
 disconnectButton.addEventListener('click', disconnectSerial);
 classSelect.addEventListener('change', () => {
   selectedClassName = classSelect.value || '';
-  lastSentCount = null; // force re-send on next frame for new class
+  lastSentCoordinates = null; // force re-send on next frame for new class
 });
 
 // Init
@@ -306,5 +383,3 @@ function drawInitialCanvasMessage() {
   canvasCtx.textAlign = 'center';
   canvasCtx.fillText('카메라를 시작하여 객체를 인식하세요', canvasElement.width / 2, canvasElement.height / 2);
 }
-
-
