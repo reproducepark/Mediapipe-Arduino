@@ -58,7 +58,7 @@ objectDet/
    - **전송 모드**: 동작만 / 손 개수 / 손잡이 정보 / 모든 정보
    - **동작 필터**: 모든 동작 / 고신뢰도만 (80%+) / 특정 동작만
 5. 설정에 따라 다음 형식으로 자동 전송됩니다:
-   - 동작만: `GESTURE:Thumb_Up:85`
+   - 동작만: `Thumb_Up:85`
    - 손 개수: `HANDS:2`
    - 손잡이: `HANDEDNESS:Left:90,Right:95`
    - 모든 정보: `ALL:G:Thumb_Up:85:H:2:HD:Left:90,Right:95`
