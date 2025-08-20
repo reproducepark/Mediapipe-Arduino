@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Image Classification</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Image Classification</h1>
+    <div class="video-container">
+      <video class="input-video" playsinline></video>
+      <canvas class="output-canvas"></canvas>
+    </div>
+    <div class="controls">
+      <button id="startButton">카메라 시작</button>
+      <button id="stopButton" disabled>카메라 중지</button>
+    </div>
+    <div class="info">
+      <p id="status">카메라를 시작하려면 버튼을 클릭하세요.</p>
+      <div class="classification-info">
+        <div class="classification-result">
+          <h3>분류 결과</h3>
+          <p id="classificationResult">없음</p>
+          <p id="classificationConfidence">신뢰도: 0%</p>
+        </div>
+        <div class="model-info">
+          <h3>모델 정보</h3>
+          <p id="modelName">EfficientNet Lite0</p>
+          <p id="processingTime">처리 시간: 0ms</p>
+        </div>
+      </div>
+      <div class="classification-details">
+        <h3>상위 3개 예측 결과</h3>
+        <div class="top-predictions">
+          <div class="prediction-item">
+            <span class="prediction-rank">1위:</span>
+            <span class="prediction-name" id="prediction1">-</span>
+            <span class="prediction-score" id="score1">0%</span>
+          </div>
+          <div class="prediction-item">
+            <span class="prediction-rank">2위:</span>
+            <span class="prediction-name" id="prediction2">-</span>
+            <span class="prediction-score" id="score2">0%</span>
+          </div>
+          <div class="prediction-item">
+            <span class="prediction-rank">3위:</span>
+            <span class="prediction-name" id="prediction3">-</span>
+            <span class="prediction-score" id="score3">0%</span>
+          </div>
+        </div>
+      </div>
+      <div class="model-description">
+        <h3>모델 설명</h3>
+        <p>EfficientNet Lite0은 ImageNet 데이터셋으로 학습된 이미지 분류 모델입니다. 1000개의 일반적인 객체 카테고리를 인식할 수 있습니다.</p>
+        <div class="model-stats">
+          <span class="stat-item">정확도: ~75%</span>
+          <span class="stat-item">모델 크기: ~6.7MB</span>
+          <span class="stat-item">카테고리: 1000개</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script type="module" src="script.js"></script>
+</body>
+</html>
