@@ -34,6 +34,10 @@ let readLoopAbortController = null;
 // Class center coordinates cache for the currently selected class
 let selectedClassName = '';
 let lastSentCoordinates = null;
+let currentDetectedCoordinates = [];
+
+// Timer for periodic transmission
+let transmissionTimer = null;
 
 // Create detector
 async function createObjectDetector() {
@@ -160,7 +164,7 @@ function drawDetections() {
   }
   canvasCtx.restore();
 
-  // Update center coordinates display and send via serial
+  // Update center coordinates display and store current coordinates
   const sel = selectedClassName || classSelect.value || '';
   if (sel && selectedClassCenters.length > 0) {
     // Display all center coordinates
@@ -170,14 +174,15 @@ function drawDetections() {
     centerCoordinateElement.textContent = 
       `중심좌표[${selectedClassCenters.length}개]: ${coordStrings.join(', ')}`;
     
-    // Auto-send if changed
-    maybeSendCenterCoordinates(sel, selectedClassCenters);
+    // Store current coordinates for periodic transmission
+    currentDetectedCoordinates = selectedClassCenters;
   } else if (sel) {
     centerCoordinateElement.textContent = `중심좌표: (${sel} 미감지)`;
-    // Send empty coordinates if no object detected
-    maybeSendCenterCoordinates(sel, []);
+    // Store empty coordinates
+    currentDetectedCoordinates = [];
   } else {
     centerCoordinateElement.textContent = '중심좌표: (-, -)';
+    currentDetectedCoordinates = [];
   }
 }
 
@@ -201,6 +206,30 @@ function maybeSendCenterCoordinates(className, coordinates) {
   } else {
     // Send indication that no objects detected
     sendSerialLine(`${className}:not_detected`);
+  }
+}
+
+// Function to send coordinates every 1 second
+function sendCoordinatesPeriodically() {
+  const sel = selectedClassName || classSelect.value || '';
+  if (sel) {
+    maybeSendCenterCoordinates(sel, currentDetectedCoordinates);
+  }
+}
+
+// Start periodic transmission timer
+function startTransmissionTimer() {
+  if (transmissionTimer) {
+    clearInterval(transmissionTimer);
+  }
+  transmissionTimer = setInterval(sendCoordinatesPeriodically, 1000); // 1초마다 전송
+}
+
+// Stop periodic transmission timer
+function stopTransmissionTimer() {
+  if (transmissionTimer) {
+    clearInterval(transmissionTimer);
+    transmissionTimer = null;
   }
 }
 
@@ -261,6 +290,10 @@ async function startCamera() {
     stopButton.disabled = false;
     statusElement.textContent = '카메라가 실행 중입니다. 객체를 카메라에 보여주세요!';
     statusElement.innerHTML += ' <span class="loading"></span>';
+    
+    // Start periodic transmission timer
+    startTransmissionTimer();
+    
     if (typeof videoElement.requestVideoFrameCallback === 'function') {
       videoElement.requestVideoFrameCallback(predictWebcamVFC);
     } else {
@@ -274,6 +307,10 @@ async function startCamera() {
 
 function stopCamera() {
   isCameraRunning = false;
+  
+  // Stop periodic transmission timer
+  stopTransmissionTimer();
+  
   if (mediaStream) {
     mediaStream.getTracks().forEach((t) => t.stop());
     mediaStream = null;
@@ -283,6 +320,7 @@ function stopCamera() {
   statusElement.textContent = '카메라를 시작하려면 버튼을 클릭하세요.';
   objectCountElement.textContent = '감지된 객체: 0';
   centerCoordinateElement.textContent = '중심좌표: (-, -)';
+  currentDetectedCoordinates = [];
   canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
   drawInitialCanvasMessage();
 }
@@ -365,6 +403,7 @@ disconnectButton.addEventListener('click', disconnectSerial);
 classSelect.addEventListener('change', () => {
   selectedClassName = classSelect.value || '';
   lastSentCoordinates = null; // force re-send on next frame for new class
+  currentDetectedCoordinates = []; // reset current coordinates
 });
 
 // Init
